@@ -1,0 +1,404 @@
+openapi: 3.0.0
+info:
+  title: API CRUD - Banking & Health
+  version: 1.0.0
+  description: API pour gérer les transactions bancaires et événements de santé par utilisateur
+
+servers:
+  - url: http://localhost:3000/api
+    description: Serveur local
+
+paths:
+  /users/{userId}/banking-transactions:
+    get:
+      summary: Récupérer toutes les transactions d'un utilisateur
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      responses:
+        '200':
+          description: Liste des transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankingTransaction'
+    
+    post:
+      summary: Créer une transaction bancaire pour un utilisateur
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankingTransactionInput'
+      responses:
+        '201':
+          description: Transaction créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankingTransaction'
+
+  /users/{userId}/banking-transactions/{id}:
+    get:
+      summary: Récupérer une transaction spécifique
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la transaction
+      responses:
+        '200':
+          description: Transaction trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankingTransaction'
+        '404':
+          description: Transaction non trouvée
+    
+    put:
+      summary: Mettre à jour une transaction
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankingTransactionInput'
+      responses:
+        '200':
+          description: Transaction mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankingTransaction'
+        '404':
+          description: Transaction non trouvée
+    
+    delete:
+      summary: Supprimer une transaction
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la transaction
+      responses:
+        '204':
+          description: Transaction supprimée
+        '404':
+          description: Transaction non trouvée
+
+  /users/{userId}/health-events/{eventId}/banking-transactions:
+    get:
+      summary: Récupérer toutes les transactions pendant un événement de santé
+      tags:
+        - Banking Transactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'événement de santé
+      responses:
+        '200':
+          description: Liste des transactions pendant l'événement
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankingTransaction'
+        '404':
+          description: Événement de santé non trouvé
+
+  /users/{userId}/health-events:
+    get:
+      summary: Récupérer tous les événements de santé d'un utilisateur
+      tags:
+        - Health Events
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      responses:
+        '200':
+          description: Liste des événements de santé
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthEvent'
+    
+    post:
+      summary: Créer un événement de santé pour un utilisateur
+      tags:
+        - Health Events
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthEventInput'
+      responses:
+        '201':
+          description: Événement créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthEvent'
+
+  /users/{userId}/health-events/{id}:
+    get:
+      summary: Récupérer un événement de santé spécifique
+      tags:
+        - Health Events
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'événement
+      responses:
+        '200':
+          description: Événement trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthEvent'
+        '404':
+          description: Événement non trouvé
+    
+    put:
+      summary: Mettre à jour un événement de santé
+      tags:
+        - Health Events
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'événement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthEventInput'
+      responses:
+        '200':
+          description: Événement mis à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthEvent'
+        '404':
+          description: Événement non trouvé
+    
+    delete:
+      summary: Supprimer un événement de santé
+      tags:
+        - Health Events
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'événement
+      responses:
+        '204':
+          description: Événement supprimé
+        '404':
+          description: Événement non trouvé
+
+components:
+  schemas:
+    BankingTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        tag:
+          $ref: '#/components/schemas/TransactionTag'
+        isCredit:
+          type: boolean
+          example: true
+        date:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        amount:
+          type: number
+          format: double
+          example: 125.50
+        userId:
+          type: integer
+          example: 42
+
+    BankingTransactionInput:
+      type: object
+      required:
+        - tag
+        - isCredit
+        - date
+        - amount
+      properties:
+        tag:
+          $ref: '#/components/schemas/TransactionTag'
+        isCredit:
+          type: boolean
+          example: true
+        date:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        amount:
+          type: number
+          format: double
+          example: 125.50
+
+    HealthEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        startDate:
+          type: string
+          format: date-time
+          example: "2024-01-15T08:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2024-01-20T18:00:00Z"
+        severity:
+          $ref: '#/components/schemas/HealthEventSeverity'
+        userId:
+          type: integer
+          example: 42
+
+    HealthEventInput:
+      type: object
+      required:
+        - startDate
+        - severity
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          example: "2024-01-15T08:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2024-01-20T18:00:00Z"
+        severity:
+          $ref: '#/components/schemas/HealthEventSeverity'
+    
+    TransactionTag:
+      type: string
+      enum:
+        - Loisir
+        - Alimentaire
+        - Loyer
+        - Salaire
+        - Investissement
+      example: Loisir
+    
+    HealthEventSeverity:
+      type: string
+      enum:
+        - Low
+        - Medium
+        - High
+      example: Medium
