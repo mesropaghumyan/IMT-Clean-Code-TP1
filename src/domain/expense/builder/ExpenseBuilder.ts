@@ -5,7 +5,7 @@ export class ExpenseBuilder {
     private _id?: string;
     private _tag?: ExpenseTag;
     private _isCredit?: boolean;
-    private _date?: Date | string;
+    private _date?: Date;
     private _amount?: number;
 
     private constructor() {}
@@ -29,7 +29,7 @@ export class ExpenseBuilder {
         return this;
     }
 
-    date(date: Date | string): ExpenseBuilder {
+    date(date: Date): ExpenseBuilder {
         this._date = date;
         return this;
     }

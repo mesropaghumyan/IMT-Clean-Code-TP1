@@ -7,6 +7,9 @@ import { errorHandler } from "./adapters/primary/express/middlewares/errorHandle
 import { ExpenseService } from "./services/ExpenseService";
 import {InMemoryExpenseRepo} from "./adapters/driven/InMemoryExpenseRepo";
 import {ExpenseController} from "./adapters/driving/ExpenseController";
+import {InMemoryHealthEventRepo} from "./adapters/driven/InMemoryHealthEventRepo";
+import {HealthEventService} from "./services/HealthEventService";
+import {HealthEventController} from "./adapters/driving/HealthEventController";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +24,11 @@ const expenseRepo = new InMemoryExpenseRepo();
 const expenseService = new ExpenseService(expenseRepo);
 const expenseController = new ExpenseController(expenseService);
 expenseController.registerRoutes(app);
+
+const healthEventRepo = new InMemoryHealthEventRepo();
+const healthEventService = new HealthEventService(healthEventRepo);
+const healthEventController = new HealthEventController(healthEventService);
+healthEventController.registerRoutes(app);
 
 app.use(errorHandler);
 
