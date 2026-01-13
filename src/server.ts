@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { errorHandler } from "./adapters/primary/express/middlewares/errorHandler";
 import { ExpenseService } from "./services/ExpenseService";
-import {InMemoryExpenseRepo} from "./adapters/driven/inMemoryExpenseRepo";
+import {InMemoryExpenseRepo} from "./adapters/driven/InMemoryExpenseRepo";
 import {ExpenseController} from "./adapters/driving/ExpenseController";
 
 const app = express();

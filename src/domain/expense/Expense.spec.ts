@@ -2,13 +2,14 @@ import { ValidationError } from "../../errors/ValidatorError";
 import { Expense } from "./Expense";
 import { ExpenseTag } from "./enum/ExpenseTag";
 import {TestUtils} from "../../utils/TestUtils";
+import {randomInt} from "node:crypto";
 
 describe('Expense Entity', () => {
 
     describe('Happy Path (Valid Data)', () => {
         it('should create a valid expense instance with random data', () => {
             const randomId = `id-${TestUtils.randomString()}`;
-            const randomAmount = TestUtils.randomNumber();
+            const randomAmount = randomInt(1, 9999);
             const randomTag = TestUtils.randomEnum(ExpenseTag);
             const randomIsCredit = Math.random() > 0.5;
             const randomDate = new Date();
@@ -38,7 +39,7 @@ describe('Expense Entity', () => {
         });
 
         it('should throw ValidationError if amount is negative', () => {
-            const negativeAmount = -(TestUtils.randomNumber());
+            const negativeAmount = -(randomInt(1, 9999));
             expect(() => {
                 new Expense(TestUtils.randomString(), ExpenseTag.DINING, false, new Date(), negativeAmount);
             }).toThrow(ValidationError);

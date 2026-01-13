@@ -1,9 +1,9 @@
 import { Express, Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { ExpenseService } from "../../services/ExpenseService";
 import { ExpenseBuilder } from "../../domain/expense/builder/ExpenseBuilder";
 import { NotFoundError } from "../../errors/NotFoundError";
 import { BadRequestError } from "../../errors/BadRequestError";
+import {randomUUID} from "node:crypto";
 
 export class ExpenseController {
     constructor(private readonly expenseService: ExpenseService) {}
@@ -45,7 +45,7 @@ export class ExpenseController {
             const { tag, isCredit, date, amount } = req.body;
 
             const newExpenseDomain = ExpenseBuilder.create()
-                .id(uuidv4())
+                .id(randomUUID())
                 .tag(tag)
                 .isCredit(isCredit)
                 .date(date)

@@ -1,56 +1,52 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Expense } from '../../domain/expense/Expense';
 import { ExpenseRepositoryPort } from '../../ports/driven/ExpenseRepositoryPort';
-
-const store: Expense[] = [];
+import {randomUUID} from "node:crypto";
+import {NotFoundError} from "../../errors/NotFoundError";
 
 export class InMemoryExpenseRepo implements ExpenseRepositoryPort {
+    constructor(private store: Expense[] = []) {}
 
     async delete(expenseId: string): Promise<void> {
-        const index = store.findIndex(exp => exp.id === expenseId);
-
+        const index = this.store.findIndex(exp => exp.id === expenseId);
         if (index !== -1) {
-            store.splice(index, 1);
+            this.store.splice(index, 1);
         }
-
         return Promise.resolve();
     }
 
     async findAll(): Promise<Expense[]> {
-        return Promise.resolve([...store]);
+        return Promise.resolve([...this.store]);
     }
 
     async findById(expenseId: string): Promise<Expense | null> {
-        const expense = store.find(exp => exp.id === expenseId);
-
+        const expense = this.store.find(exp => exp.id === expenseId);
         return Promise.resolve(expense || null);
     }
 
     async save(newExpense: Omit<Expense, "id">): Promise<Expense> {
         const expenseWithId: Expense = {
             ...newExpense,
-            id: uuidv4()
-        };
+            id: randomUUID()
+        } as Expense;
 
-        store.push(expenseWithId);
-
+        this.store.push(expenseWithId);
         return Promise.resolve(expenseWithId);
     }
 
     async update(updatedExpenseId: string, updatedFields: Omit<Expense, "id">): Promise<Expense> {
-        const index = store.findIndex(exp => exp.id === updatedExpenseId);
+        const index = this.store.findIndex(exp => exp.id === updatedExpenseId);
 
         if (index === -1) {
-            throw new Error(`Expense with id ${updatedExpenseId} not found`);
+            throw new NotFoundError(`Expense with id ${updatedExpenseId} not found`);
         }
 
         const updatedExpense: Expense = {
-            ...store[index],
+            ...this.store[index],
             ...updatedFields,
             id: updatedExpenseId
         };
 
-        store[index] = updatedExpense;
+        this.store[index] = updatedExpense;
         return Promise.resolve(updatedExpense);
     }
 }
