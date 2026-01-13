@@ -1,6 +1,5 @@
 import { Expense } from "../Expense";
-import {ExpenseTag} from "../enum/ExpenseTag";
-import {Validator} from "../../../utils/Validator";
+import { ExpenseTag } from "../enum/ExpenseTag";
 
 export class ExpenseBuilder {
     private _id?: string;
@@ -42,11 +41,11 @@ export class ExpenseBuilder {
 
     build(): Expense {
         return new Expense(
-            Validator.required(this._id, 'id'),
-            Validator.required(this._tag, 'tag'),
-            Validator.required(this._isCredit, 'isCredit'),
-            Validator.required(this._date, 'date'),
-            Validator.required(this._amount, 'amount')
+            this._id!,
+            this._tag!,
+            this._isCredit!,
+            this._date!,
+            this._amount!
         );
     }
 }
