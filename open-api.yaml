@@ -1,208 +1,158 @@
 openapi: 3.0.0
 info:
-  title: API CRUD - Banking & Health
-  version: 1.0.0
-  description: API pour gérer les transactions bancaires et événements de santé par utilisateur
+  title: API CRUD - Expenses & Health
+  version: 1.0.2
+  description: |
+    API de gestion des transactions et événements de santé.
+  contact:
+    name: Mesrop AGHUMYAN
+    email: contact@mesrop-aghumyan.fr
 
 servers:
-  - url: http://localhost:3000/api
-    description: Serveur local
+  - url: http://localhost:3000
+    description: Serveur de développement local
+  - url: https://api.production.com/v1
+    description: Serveur de production
+
+tags:
+  - name: Expenses
+    description: Gestion des transactions financières
+  - name: Health Events
+    description: Suivi des événements médicaux
 
 paths:
-  /users/{userId}/banking-transactions:
+  /expenses:
     get:
-      summary: Récupérer toutes les transactions d'un utilisateur
+      summary: Récupérer la liste des dépenses (paginée)
       tags:
-        - Banking Transactions
+        - Expenses
       parameters:
-        - name: userId
-          in: path
-          required: true
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: tag
+          in: query
+          description: Filtrer par catégorie
           schema:
-            type: integer
-          description: ID de l'utilisateur
+            $ref: '#/components/schemas/ExpenseTag'
+          required: false
       responses:
         '200':
-          description: Liste des transactions
+          description: Liste des dépenses récupérée avec succès
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BankingTransaction'
-    
+                  $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     post:
-      summary: Créer une transaction bancaire pour un utilisateur
+      summary: Créer une nouvelle dépense
       tags:
-        - Banking Transactions
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
+        - Expenses
       requestBody:
+        description: Données de la dépense à créer
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankingTransactionInput'
+              $ref: '#/components/schemas/ExpenseInput'
       responses:
         '201':
-          description: Transaction créée
+          description: Dépense créée avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankingTransaction'
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
-  /users/{userId}/banking-transactions/{id}:
+  /expenses/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdParam'
     get:
-      summary: Récupérer une transaction spécifique
+      summary: Récupérer une dépense spécifique
       tags:
-        - Banking Transactions
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de la transaction
+        - Expenses
       responses:
         '200':
-          description: Transaction trouvée
+          description: Dépense trouvée
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankingTransaction'
+                $ref: '#/components/schemas/Expense'
         '404':
-          description: Transaction non trouvée
-    
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     put:
-      summary: Mettre à jour une transaction
+      summary: Mettre à jour une dépense
       tags:
-        - Banking Transactions
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de la transaction
+        - Expenses
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankingTransactionInput'
+              $ref: '#/components/schemas/ExpenseInput'
       responses:
         '200':
-          description: Transaction mise à jour
+          description: Dépense mise à jour avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankingTransaction'
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: Transaction non trouvée
-    
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     delete:
-      summary: Supprimer une transaction
+      summary: Supprimer une dépense
       tags:
-        - Banking Transactions
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de la transaction
+        - Expenses
       responses:
         '204':
-          description: Transaction supprimée
+          description: Dépense supprimée (pas de contenu retourné)
         '404':
-          description: Transaction non trouvée
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
-  /users/{userId}/health-events/{eventId}/banking-transactions:
+  /health-events:
     get:
-      summary: Récupérer toutes les transactions pendant un événement de santé
-      tags:
-        - Banking Transactions
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: eventId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'événement de santé
-      responses:
-        '200':
-          description: Liste des transactions pendant l'événement
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BankingTransaction'
-        '404':
-          description: Événement de santé non trouvé
-
-  /users/{userId}/health-events:
-    get:
-      summary: Récupérer tous les événements de santé d'un utilisateur
+      summary: Récupérer tous les événements de santé (paginé)
       tags:
         - Health Events
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
       responses:
         '200':
-          description: Liste des événements de santé
+          description: Liste des événements récupérée
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/HealthEvent'
-    
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     post:
-      summary: Créer un événement de santé pour un utilisateur
+      summary: Créer un événement de santé
       tags:
         - Health Events
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
       requestBody:
         required: true
         content:
@@ -216,25 +166,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthEvent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
-  /users/{userId}/health-events/{id}:
+  /health-events/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdParam'
     get:
       summary: Récupérer un événement de santé spécifique
       tags:
         - Health Events
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'événement
       responses:
         '200':
           description: Événement trouvé
@@ -243,25 +186,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthEvent'
         '404':
-          description: Événement non trouvé
-    
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     put:
       summary: Mettre à jour un événement de santé
       tags:
         - Health Events
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'événement
       requestBody:
         required: true
         content:
@@ -275,45 +207,111 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthEvent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: Événement non trouvé
-    
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     delete:
       summary: Supprimer un événement de santé
       tags:
         - Health Events
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'utilisateur
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID de l'événement
       responses:
         '204':
           description: Événement supprimé
         '404':
-          description: Événement non trouvé
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
 components:
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Numéro de la page (pagination)
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    LimitParam:
+      name: limit
+      in: query
+      description: Nombre d'éléments par page
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+    IdParam:
+      name: id
+      in: path
+      required: true
+      description: Identifiant unique de la ressource
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Requête invalide (problème de validation)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Ressource non trouvée
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalError:
+      description: Erreur interne du serveur
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
   schemas:
-    BankingTransaction:
+    # --- Schéma d'erreur Standard ---
+    Error:
       type: object
       properties:
-        id:
+        code:
           type: integer
-          example: 1
+          example: 400
+        message:
+          type: string
+          example: "La date de fin ne peut pas être avant la date de début."
+        details:
+          type: array
+          items:
+            type: string
+          example: ["Champ 'amount' requis"]
+
+    # --- Schemas Expense ---
+    Expense:
+      type: object
+      required:
+        - id
+        - tag
+        - isCredit
+        - date
+        - amount
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
         tag:
-          $ref: '#/components/schemas/TransactionTag'
+          $ref: '#/components/schemas/ExpenseTag'
         isCredit:
           type: boolean
           example: true
+          description: Vrai si c'est une entrée d'argent, Faux si dépense
         date:
           type: string
           format: date-time
@@ -321,12 +319,10 @@ components:
         amount:
           type: number
           format: double
+          minimum: 0
           example: 125.50
-        userId:
-          type: integer
-          example: 42
 
-    BankingTransactionInput:
+    ExpenseInput:
       type: object
       required:
         - tag
@@ -335,10 +331,11 @@ components:
         - amount
       properties:
         tag:
-          $ref: '#/components/schemas/TransactionTag'
+          $ref: '#/components/schemas/ExpenseTag'
         isCredit:
           type: boolean
-          example: true
+          description: "Définit si c'est un revenu ou une dépense"
+          example: false
         date:
           type: string
           format: date-time
@@ -346,14 +343,33 @@ components:
         amount:
           type: number
           format: double
+          minimum: 0.01
           example: 125.50
 
+    ExpenseTag:
+      type: string
+      enum:
+        - Loisir
+        - Alimentaire
+        - Loyer
+        - Salaire
+        - Investissement
+        - Santé
+        - Transport
+      example: Loisir
+
+    # --- Schemas Health ---
     HealthEvent:
       type: object
+      required:
+        - id
+        - startDate
+        - severity
       properties:
         id:
-          type: integer
-          example: 1
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
         startDate:
           type: string
           format: date-time
@@ -361,12 +377,10 @@ components:
         endDate:
           type: string
           format: date-time
+          nullable: true
           example: "2024-01-20T18:00:00Z"
         severity:
           $ref: '#/components/schemas/HealthEventSeverity'
-        userId:
-          type: integer
-          example: 42
 
     HealthEventInput:
       type: object
@@ -381,24 +395,16 @@ components:
         endDate:
           type: string
           format: date-time
+          nullable: true
           example: "2024-01-20T18:00:00Z"
         severity:
           $ref: '#/components/schemas/HealthEventSeverity'
-    
-    TransactionTag:
-      type: string
-      enum:
-        - Loisir
-        - Alimentaire
-        - Loyer
-        - Salaire
-        - Investissement
-      example: Loisir
-    
+
     HealthEventSeverity:
       type: string
       enum:
         - Low
         - Medium
         - High
+        - Critical
       example: Medium

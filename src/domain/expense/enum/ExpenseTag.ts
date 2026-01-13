@@ -1,4 +1,4 @@
-export enum TransactionTag {
+export enum ExpenseTag {
     GROCERIES = 'GROCERIES',
     UTILITIES = 'UTILITIES',
     ENTERTAINMENT = 'ENTERTAINMENT',
