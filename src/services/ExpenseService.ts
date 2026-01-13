@@ -1,27 +1,27 @@
-import {ExpensePort} from "../ports/driving/ExpensePort";
+import {CrudPort} from "../ports/driving/CrudPort";
 import {RepositoryPort} from "../ports/driven/RepositoryPort";
 import {Expense} from "../domain/expense/Expense";
 
-export class ExpenseService implements ExpensePort {
+export class ExpenseService implements CrudPort<Expense> {
     constructor(private repo: RepositoryPort<Expense>) {}
 
-    createExpense(expense: Expense): Promise<Expense> {
+    create(expense: Expense): Promise<Expense> {
         return this.repo.save(expense);
     }
 
-    deleteExpense(expenseId: string): Promise<void> {
+    delete(expenseId: string): Promise<void> {
         return this.repo.delete(expenseId);
     }
 
-    getExpense(expenseId: string): Promise<Expense | null> {
+    getById(expenseId: string): Promise<Expense | null> {
         return this.repo.findById(expenseId);
     }
 
-    listExpenses(): Promise<Expense[]> {
+    listAll(): Promise<Expense[]> {
         return this.repo.findAll();
     }
 
-    updateExpense(expenseId: string, expense: Expense): Promise<Expense> {
+    update(expenseId: string, expense: Expense): Promise<Expense> {
         return this.repo.update(expenseId, expense);
     }
 

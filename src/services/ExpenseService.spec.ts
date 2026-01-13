@@ -31,7 +31,7 @@ describe('ExpenseService', () => {
         );
         mockRepo.save.mockResolvedValue(expense);
 
-        const result = await service.createExpense(expense);
+        const result = await service.create(expense);
 
         expect(mockRepo.save).toHaveBeenCalledWith(expense);
         expect(result).toBe(expense);
@@ -48,7 +48,7 @@ describe('ExpenseService', () => {
         );
         mockRepo.findById.mockResolvedValue(expense);
 
-        const result = await service.getExpense(id);
+        const result = await service.getById(id);
 
         expect(mockRepo.findById).toHaveBeenCalledWith(id);
         expect(result).toBe(expense);
@@ -58,7 +58,7 @@ describe('ExpenseService', () => {
         const unknownId = randomUUID();
         mockRepo.findById.mockResolvedValue(null);
 
-        const result = await service.getExpense(unknownId);
+        const result = await service.getById(unknownId);
 
         expect(result).toBeNull();
     });
@@ -67,7 +67,7 @@ describe('ExpenseService', () => {
         const id = randomUUID();
         mockRepo.delete.mockResolvedValue(undefined);
 
-        await service.deleteExpense(id);
+        await service.delete(id);
 
         expect(mockRepo.delete).toHaveBeenCalledWith(id);
     });
@@ -79,7 +79,7 @@ describe('ExpenseService', () => {
         ];
         mockRepo.findAll.mockResolvedValue(expenses);
 
-        const result = await service.listExpenses();
+        const result = await service.listAll();
 
         expect(mockRepo.findAll).toHaveBeenCalled();
         expect(result).toHaveLength(2);
@@ -97,7 +97,7 @@ describe('ExpenseService', () => {
         );
         mockRepo.update.mockResolvedValue(updatedExpense);
 
-        const result = await service.updateExpense(id, updatedExpense);
+        const result = await service.update(id, updatedExpense);
 
         expect(mockRepo.update).toHaveBeenCalledWith(id, updatedExpense);
         expect(result).toBe(updatedExpense);
