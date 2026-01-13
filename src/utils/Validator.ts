@@ -53,4 +53,13 @@ export class Validator {
         }
         return value as T;
     }
+
+    // Vérifie la cohérence d'une intervalle de dates
+    static dateRange(start: Date, end: Date, fieldName: string): void {
+        if (end < start) {
+            throw new ValidationError(
+                `[Validator] ${fieldName}: endDate cannot be before startDate`
+            );
+        }
+    }
 }
