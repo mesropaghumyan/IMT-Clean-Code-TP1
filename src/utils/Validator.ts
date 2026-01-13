@@ -15,6 +15,11 @@ export class Validator {
         if (value === undefined || value === null || typeof value !== 'number' || isNaN(value)) {
             throw new ValidationError(`Le champ '${fieldName}' est requis et doit être un nombre valide.`);
         }
+
+        if (value < 0) {
+            throw new ValidationError(`Le champ '${fieldName}' ne peut pas être négatif.`);
+        }
+
         return value;
     }
 
