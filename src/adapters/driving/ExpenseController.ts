@@ -42,13 +42,13 @@ export class ExpenseController {
 
     async createExpense(req: Request, res: Response, next: NextFunction) {
         try {
-            const { tag, isCredit, date, amount } = req.body;
+            const { tag, isCredit, amount } = req.body;
 
             const newExpenseDomain = ExpenseBuilder.create()
                 .id(randomUUID())
                 .tag(tag)
                 .isCredit(isCredit)
-                .date(date)
+                .date(new Date())
                 .amount(amount)
                 .build();
 
@@ -72,12 +72,12 @@ export class ExpenseController {
                 return next(new NotFoundError("Dépense non trouvée"));
             }
 
-            const { tag, isCredit, date, amount } = req.body;
+            const { tag, isCredit, amount } = req.body;
             const expenseToUpdate = ExpenseBuilder.create()
                 .id(id)
                 .tag(tag)
                 .isCredit(isCredit)
-                .date(date)
+                .date(new Date())
                 .amount(amount)
                 .build();
 
