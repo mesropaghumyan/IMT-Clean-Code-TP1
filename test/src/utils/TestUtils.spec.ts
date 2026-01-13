@@ -1,4 +1,4 @@
-import { TestUtils } from "./TestUtils";
+import { TestUtils } from "../../../src/utils/TestUtils";
 
 describe('TestUtils Utility', () => {
 

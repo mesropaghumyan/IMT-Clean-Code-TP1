@@ -1,7 +1,7 @@
-import { ValidationError } from "../../errors/ValidatorError";
-import { Expense } from "./Expense";
-import { ExpenseTag } from "./enum/ExpenseTag";
-import {TestUtils} from "../../utils/TestUtils";
+import { ValidationError } from "../../../../src/errors/ValidatorError";
+import { Expense } from "../../../../src/domain/expense/Expense";
+import { ExpenseTag } from "../../../../src/domain/expense/enum/ExpenseTag";
+import {TestUtils} from "../../../../src/utils/TestUtils";
 import {randomInt} from "node:crypto";
 
 describe('Expense Entity', () => {

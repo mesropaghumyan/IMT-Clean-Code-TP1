@@ -1,8 +1,8 @@
-import { InMemoryHealthEventRepo } from "./InMemoryHealthEventRepo";
-import { HealthEvent } from "../../domain/healthEvent/HealthEvent";
-import { HealthEventSeverity } from "../../domain/healthEvent/enum/HealthEventSeverity";
-import { NotFoundError } from "../../errors/NotFoundError";
-import { TestUtils } from "../../utils/TestUtils";
+import { InMemoryHealthEventRepo } from "../../../../src/adapters/driven/InMemoryHealthEventRepo";
+import { HealthEvent } from "../../../../src/domain/healthEvent/HealthEvent";
+import { HealthEventSeverity } from "../../../../src/domain/healthEvent/enum/HealthEventSeverity";
+import { NotFoundError } from "../../../../src/errors/NotFoundError";
+import { TestUtils } from "../../../../src/utils/TestUtils";
 import { randomUUID } from "node:crypto";
 
 describe('InMemoryHealthEventRepo', () => {

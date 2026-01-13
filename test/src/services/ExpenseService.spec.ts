@@ -1,8 +1,8 @@
-import { ExpenseService } from "./ExpenseService";
-import { RepositoryPort } from "../ports/driven/RepositoryPort";
-import { Expense } from "../domain/expense/Expense";
-import { ExpenseTag } from "../domain/expense/enum/ExpenseTag";
-import { TestUtils } from "../utils/TestUtils";
+import { ExpenseService } from "../../../src/services/ExpenseService";
+import { RepositoryPort } from "../../../src/ports/driven/RepositoryPort";
+import { Expense } from "../../../src/domain/expense/Expense";
+import { ExpenseTag } from "../../../src/domain/expense/enum/ExpenseTag";
+import { TestUtils } from "../../../src/utils/TestUtils";
 import {randomInt, randomUUID} from "node:crypto";
 
 describe('ExpenseService', () => {

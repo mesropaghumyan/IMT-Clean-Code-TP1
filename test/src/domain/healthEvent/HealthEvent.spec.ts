@@ -1,7 +1,7 @@
-import { ValidationError } from "../../errors/ValidatorError";
-import { HealthEvent } from "./HealthEvent";
-import { HealthEventSeverity } from "./enum/HealthEventSeverity";
-import { TestUtils } from "../../utils/TestUtils";
+import { ValidationError } from "../../../../src/errors/ValidatorError";
+import { HealthEvent } from "../../../../src/domain/healthEvent/HealthEvent";
+import { HealthEventSeverity } from "../../../../src/domain/healthEvent/enum/HealthEventSeverity";
+import { TestUtils } from "../../../../src/utils/TestUtils";
 import { randomUUID } from "node:crypto";
 
 describe('HealthEvent Entity', () => {

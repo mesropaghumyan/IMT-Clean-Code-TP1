@@ -1,8 +1,8 @@
-import { HealthEventService } from "./HealthEventService";
-import { RepositoryPort } from "../ports/driven/RepositoryPort";
-import { HealthEvent } from "../domain/healthEvent/HealthEvent";
-import { HealthEventSeverity } from "../domain/healthEvent/enum/HealthEventSeverity";
-import { TestUtils } from "../utils/TestUtils";
+import { HealthEventService } from "../../../src/services/HealthEventService";
+import { RepositoryPort } from "../../../src/ports/driven/RepositoryPort";
+import { HealthEvent } from "../../../src/domain/healthEvent/HealthEvent";
+import { HealthEventSeverity } from "../../../src/domain/healthEvent/enum/HealthEventSeverity";
+import { TestUtils } from "../../../src/utils/TestUtils";
 import { randomUUID } from "node:crypto";
 
 describe('HealthEventService', () => {

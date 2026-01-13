@@ -1,8 +1,8 @@
-import { InMemoryExpenseRepo } from "./InMemoryExpenseRepo";
-import { Expense } from "../../domain/expense/Expense";
-import { ExpenseTag } from "../../domain/expense/enum/ExpenseTag";
-import { NotFoundError } from "../../errors/NotFoundError";
-import {TestUtils} from "../../utils/TestUtils";
+import { InMemoryExpenseRepo } from "../../../../src/adapters/driven/InMemoryExpenseRepo";
+import { Expense } from "../../../../src/domain/expense/Expense";
+import { ExpenseTag } from "../../../../src/domain/expense/enum/ExpenseTag";
+import { NotFoundError } from "../../../../src/errors/NotFoundError";
+import {TestUtils} from "../../../../src/utils/TestUtils";
 import {randomInt, randomUUID} from "node:crypto";
 
 describe('InMemoryExpenseRepo', () => {

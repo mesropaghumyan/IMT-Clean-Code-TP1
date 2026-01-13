@@ -1,6 +1,6 @@
-import { Validator } from "./Validator";
-import { ValidationError } from "../errors/ValidatorError";
-import { TestUtils } from "./TestUtils";
+import { Validator } from "../../../src/utils/Validator";
+import { ValidationError } from "../../../src/errors/ValidatorError";
+import { TestUtils } from "../../../src/utils/TestUtils";
 import {randomInt} from "node:crypto";
 
 describe('Validator Utility', () => {
