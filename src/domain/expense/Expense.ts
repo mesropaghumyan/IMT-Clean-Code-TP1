@@ -12,7 +12,7 @@ export class Expense {
         id: string,
         tag: ExpenseTag,
         isCredit: boolean,
-        date: Date | string,
+        date: Date,
         amount: number
     ) {
         this.id = Validator.string(id, 'id');

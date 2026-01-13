@@ -1,5 +1,5 @@
 import { ExpenseService } from "./ExpenseService";
-import { ExpenseRepositoryPort } from "../ports/driven/ExpenseRepositoryPort";
+import { RepositoryPort } from "../ports/driven/RepositoryPort";
 import { Expense } from "../domain/expense/Expense";
 import { ExpenseTag } from "../domain/expense/enum/ExpenseTag";
 import { TestUtils } from "../utils/TestUtils";
@@ -7,7 +7,7 @@ import {randomInt, randomUUID} from "node:crypto";
 
 describe('ExpenseService', () => {
     let service: ExpenseService;
-    let mockRepo: jest.Mocked<ExpenseRepositoryPort>;
+    let mockRepo: jest.Mocked<RepositoryPort<Expense, string>>;
 
     beforeEach(() => {
         mockRepo = {

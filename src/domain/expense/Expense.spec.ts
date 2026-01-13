@@ -53,7 +53,7 @@ describe('Expense Entity', () => {
 
         it('should throw ValidationError if date is invalid', () => {
             expect(() => {
-                new Expense(TestUtils.randomString(), ExpenseTag.DINING, false, "invalid-date", 100);
+                new Expense(TestUtils.randomString(), ExpenseTag.DINING, false, ("invalid-date" as unknown as Date), 100);
             }).toThrow(ValidationError);
         });
 

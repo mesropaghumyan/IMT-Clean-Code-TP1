@@ -1,9 +1,9 @@
 import {ExpensePort} from "../ports/driving/ExpensePort";
-import {ExpenseRepositoryPort} from "../ports/driven/ExpenseRepositoryPort";
+import {RepositoryPort} from "../ports/driven/RepositoryPort";
 import {Expense} from "../domain/expense/Expense";
 
 export class ExpenseService implements ExpensePort {
-    constructor(private repo: ExpenseRepositoryPort) {}
+    constructor(private repo: RepositoryPort<Expense>) {}
 
     createExpense(expense: Expense): Promise<Expense> {
         return this.repo.save(expense);

@@ -1,9 +1,9 @@
 import { Expense } from '../../domain/expense/Expense';
-import { ExpenseRepositoryPort } from '../../ports/driven/ExpenseRepositoryPort';
+import { RepositoryPort } from '../../ports/driven/RepositoryPort';
 import {randomUUID} from "node:crypto";
 import {NotFoundError} from "../../errors/NotFoundError";
 
-export class InMemoryExpenseRepo implements ExpenseRepositoryPort {
+export class InMemoryExpenseRepo implements RepositoryPort<Expense> {
     constructor(private store: Expense[] = []) {}
 
     async delete(expenseId: string): Promise<void> {
