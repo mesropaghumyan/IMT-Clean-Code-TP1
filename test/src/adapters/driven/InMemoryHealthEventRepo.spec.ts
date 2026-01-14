@@ -111,10 +111,13 @@ describe('InMemoryHealthEventRepo', () => {
                 endDate: new Date(),
                 severity: HealthEventSeverity.LOW
             });
+            let allEvents = await repo.findAll();
+            expect(allEvents).toHaveLength(1);
 
-            await expect(repo.delete(randomUUID()))
-                .rejects
-                .toThrow(NotFoundError);
+            await expect(repo.delete(randomUUID())).resolves.not.toThrow();
+            allEvents = await repo.findAll();
+
+            expect(allEvents).toHaveLength(1);
         });
     });
 });
