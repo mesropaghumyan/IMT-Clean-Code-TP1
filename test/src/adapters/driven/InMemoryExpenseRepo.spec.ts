@@ -65,15 +65,15 @@ describe('InMemoryExpenseRepo', () => {
             await expect(repo.update(fakeId, updateData))
                 .rejects
                 .toThrow(NotFoundError);
+
             await expect(repo.update(fakeId, updateData))
                 .rejects
-                .toThrow(`Expense with id ${fakeId} not found`);
+                .toThrow(`La dépense avec l'id '${fakeId}' est introuvable`);
         });
     });
 
     describe('findById', () => {
         it('should return the expense when it exists in the store', async () => {
-            // Arrange
             const expenseData = {
                 tag: TestUtils.randomEnum(ExpenseTag),
                 isCredit: TestUtils.randomBoolean(),
@@ -82,19 +82,15 @@ describe('InMemoryExpenseRepo', () => {
             };
             const saved = await repo.save(expenseData);
 
-            // Act
             const found = await repo.findById(saved.id);
 
-            // Assert
             expect(found).toEqual(saved);
             expect(found?.id).toBe(saved.id);
         });
 
         it('should return null when the expense does not exist', async () => {
-            // Act
             const found = await repo.findById(randomUUID());
 
-            // Assert
             expect(found).toBeNull();
         });
     });

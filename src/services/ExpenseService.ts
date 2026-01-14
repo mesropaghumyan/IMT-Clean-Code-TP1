@@ -1,12 +1,16 @@
 import {CrudPort} from "../ports/driving/CrudPort";
 import {RepositoryPort} from "../ports/driven/RepositoryPort";
 import {Expense} from "../domain/expense/Expense";
+import {CreateExpenseDTO} from "../domain/expense/dto/CreateExpenseDTO";
+import {UpdateExpenseDTO} from "../domain/expense/dto/UpdateExpenseDTO";
 
 export class ExpenseService implements CrudPort<Expense> {
     constructor(private repo: RepositoryPort<Expense>) {}
 
-    create(expense: Expense): Promise<Expense> {
-        return this.repo.save(expense);
+    create(createExpenseDTO: CreateExpenseDTO): Promise<Expense> {
+        // set automatically date
+        createExpenseDTO.date = new Date();
+        return this.repo.save(createExpenseDTO);
     }
 
     delete(expenseId: string): Promise<void> {
@@ -21,9 +25,9 @@ export class ExpenseService implements CrudPort<Expense> {
         return this.repo.findAll();
     }
 
-    update(expenseId: string, expense: Expense): Promise<Expense> {
-        return this.repo.update(expenseId, expense);
+    update(expenseId: string, updateExpenseDTO: UpdateExpenseDTO): Promise<Expense> {
+        // set automatically date
+        updateExpenseDTO.date = new Date();
+        return this.repo.update(expenseId, updateExpenseDTO);
     }
-
-
 }

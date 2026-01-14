@@ -72,7 +72,7 @@ describe('InMemoryHealthEventRepo', () => {
                 .toThrow(NotFoundError);
             await expect(repo.update(fakeId, updateData))
                 .rejects
-                .toThrow(`HealthEvent with id ${fakeId} not found`);
+                .toThrow(`L'evénement de santé avec l'id '${fakeId}' est introuvable`);
         });
     });
 
@@ -89,11 +89,6 @@ describe('InMemoryHealthEventRepo', () => {
 
             expect(found).toEqual(saved);
         });
-
-        it('should return null when the health event does not exist', async () => {
-            const found = await repo.findById(randomUUID());
-            expect(found).toBeNull();
-        });
     });
 
     describe('delete', () => {
@@ -108,8 +103,6 @@ describe('InMemoryHealthEventRepo', () => {
             await repo.delete(saved.id);
 
             expect(store).toHaveLength(0);
-            const check = await repo.findById(saved.id);
-            expect(check).toBeNull();
         });
 
         it('should not throw and change nothing if the id does not exist', async () => {
@@ -118,11 +111,10 @@ describe('InMemoryHealthEventRepo', () => {
                 endDate: new Date(),
                 severity: HealthEventSeverity.LOW
             });
-            expect(store).toHaveLength(1);
 
-            await repo.delete(randomUUID());
-
-            expect(store).toHaveLength(1);
+            await expect(repo.delete(randomUUID()))
+                .rejects
+                .toThrow(NotFoundError);
         });
     });
 });

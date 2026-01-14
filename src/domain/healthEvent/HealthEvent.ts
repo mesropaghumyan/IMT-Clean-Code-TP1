@@ -1,6 +1,5 @@
 import {HealthEventSeverity} from "./enum/HealthEventSeverity";
 import {Validator} from "../../utils/Validator";
-import {ValidationError} from "../../errors/ValidatorError";
 
 export class HealthEvent {
         readonly id: string;

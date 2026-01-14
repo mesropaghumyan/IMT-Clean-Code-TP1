@@ -1,9 +1,7 @@
 import { Express, Request, Response, NextFunction } from 'express';
 import { ExpenseService } from "../../services/ExpenseService";
-import { ExpenseBuilder } from "../../domain/expense/builder/ExpenseBuilder";
-import { NotFoundError } from "../../errors/NotFoundError";
-import { BadRequestError } from "../../errors/BadRequestError";
-import {randomUUID} from "node:crypto";
+import {CreateExpenseDTO} from "../../domain/expense/dto/CreateExpenseDTO";
+import {UpdateExpenseDTO} from "../../domain/expense/dto/UpdateExpenseDTO";
 
 export class ExpenseController {
     constructor(private readonly expenseService: ExpenseService) {}
@@ -19,7 +17,9 @@ export class ExpenseController {
     async getAllExpenses(req: Request, res: Response, next: NextFunction) {
         try {
             const expenses = await this.expenseService.listAll();
+
             res.status(200).json(expenses);
+
         } catch (error) {
             next(error);
         }
@@ -28,13 +28,11 @@ export class ExpenseController {
     async getExpenseById(req: Request, res: Response, next: NextFunction) {
         try {
             const id = req.params.id as string;
+
             const expense = await this.expenseService.getById(id);
 
-            if (!expense) {
-                return next(new NotFoundError("Dépense non trouvée"));
-            }
-
             res.status(200).json(expense);
+
         } catch (error) {
             next(error);
         }
@@ -42,67 +40,43 @@ export class ExpenseController {
 
     async createExpense(req: Request, res: Response, next: NextFunction) {
         try {
-            const { tag, isCredit, amount } = req.body;
+            const createExpenseDTO: CreateExpenseDTO = {
+                ...req.body,
+            }
 
-            const newExpenseDomain = ExpenseBuilder.create()
-                .id(randomUUID())
-                .tag(tag)
-                .isCredit(isCredit)
-                .date(new Date())
-                .amount(amount)
-                .build();
+            const createdExpense = await this.expenseService.create(createExpenseDTO);
 
-            const createdExpense = await this.expenseService.create(newExpenseDomain);
             res.status(201).json(createdExpense);
 
         } catch (error) {
-            if (error instanceof Error && error.message.includes('[Validator]')) {
-                return next(new BadRequestError(error.message));
-            }
             next(error);
         }
     }
 
     async updateExpense(req: Request, res: Response, next: NextFunction) {
         try {
-            const id = req.params.id as string;
-
-            const existing = await this.expenseService.getById(id);
-            if (!existing) {
-                return next(new NotFoundError("Dépense non trouvée"));
+            const expenseId = req.params.id as string;
+            const newValues: UpdateExpenseDTO = {
+                ...req.body
             }
 
-            const { tag, isCredit, amount } = req.body;
-            const expenseToUpdate = ExpenseBuilder.create()
-                .id(id)
-                .tag(tag)
-                .isCredit(isCredit)
-                .date(new Date())
-                .amount(amount)
-                .build();
+            const updatedExpense = await this.expenseService.update(expenseId, newValues);
 
-            const updated = await this.expenseService.update(id, expenseToUpdate);
-            res.status(200).json(updated);
+            res.status(200).json(updatedExpense);
 
         } catch (error) {
-            if (error instanceof Error && error.message.includes('[Validator]')) {
-                return next(new BadRequestError(error.message));
-            }
             next(error);
         }
     }
 
     async deleteExpense(req: Request, res: Response, next: NextFunction) {
         try {
-            const id = req.params.id as string;
+            const expenseId = req.params.id as string;
 
-            const existing = await this.expenseService.getById(id);
-            if (!existing) {
-                return next(new NotFoundError("Dépense non trouvée"));
-            }
+            await this.expenseService.delete(expenseId);
 
-            await this.expenseService.delete(id);
             res.status(204).send();
+
         } catch (error) {
             next(error);
         }

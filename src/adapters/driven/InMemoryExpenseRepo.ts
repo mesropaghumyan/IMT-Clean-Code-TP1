@@ -1,16 +1,19 @@
-import { Expense } from '../../domain/expense/Expense';
-import { RepositoryPort } from '../../ports/driven/RepositoryPort';
-import {randomUUID} from "node:crypto";
+import {ExpenseBuilder} from "../../domain/expense/builder/ExpenseBuilder";
 import {NotFoundError} from "../../errors/NotFoundError";
+import {Expense} from "../../domain/expense/Expense";
+import {randomUUID} from "node:crypto";
+import {RepositoryPort} from "../../ports/driven/RepositoryPort";
 
 export class InMemoryExpenseRepo implements RepositoryPort<Expense> {
     constructor(private store: Expense[] = []) {}
 
-    async delete(expenseId: string): Promise<void> {
-        const index = this.store.findIndex(exp => exp.id === expenseId);
+    async delete(id: string): Promise<void> {
+        const index = this.store.findIndex(exp => exp.id === id);
+
         if (index !== -1) {
             this.store.splice(index, 1);
         }
+
         return Promise.resolve();
     }
 
@@ -20,31 +23,37 @@ export class InMemoryExpenseRepo implements RepositoryPort<Expense> {
 
     async findById(expenseId: string): Promise<Expense | null> {
         const expense = this.store.find(exp => exp.id === expenseId);
+
         return Promise.resolve(expense || null);
     }
 
     async save(newExpense: Omit<Expense, "id">): Promise<Expense> {
-        const expenseWithId: Expense = {
-            ...newExpense,
-            id: randomUUID()
-        } as Expense;
+        const expense = ExpenseBuilder.create()
+            .id(randomUUID())
+            .tag(newExpense.tag)
+            .isCredit(newExpense.isCredit)
+            .amount(newExpense.amount)
+            .date(newExpense.date)
+            .build();
 
-        this.store.push(expenseWithId);
-        return Promise.resolve(expenseWithId);
+        this.store.push(expense);
+        return Promise.resolve(expense);
     }
 
-    async update(updatedExpenseId: string, updatedFields: Omit<Expense, "id">): Promise<Expense> {
-        const index = this.store.findIndex(exp => exp.id === updatedExpenseId);
+    async update(id: string, updatedFields: Omit<Expense, "id">): Promise<Expense> {
+        const index = this.store.findIndex(exp => exp.id === id);
 
         if (index === -1) {
-            throw new NotFoundError(`Expense with id ${updatedExpenseId} not found`);
+            throw new NotFoundError(`La dépense avec l'id '${id}' est introuvable`);
         }
 
-        const updatedExpense: Expense = {
-            ...this.store[index],
-            ...updatedFields,
-            id: updatedExpenseId
-        };
+        const updatedExpense = ExpenseBuilder.create()
+            .id(id)
+            .tag(updatedFields.tag)
+            .isCredit(updatedFields.isCredit)
+            .amount(updatedFields.amount)
+            .date(updatedFields.date)
+            .build();
 
         this.store[index] = updatedExpense;
         return Promise.resolve(updatedExpense);

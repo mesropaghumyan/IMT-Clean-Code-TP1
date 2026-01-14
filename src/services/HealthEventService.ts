@@ -1,11 +1,13 @@
 import { CrudPort } from "../ports/driving/CrudPort";
 import { RepositoryPort } from "../ports/driven/RepositoryPort";
 import {HealthEvent} from "../domain/healthEvent/HealthEvent";
+import {UpdateHealthEventDTO} from "../domain/healthEvent/dto/UpdateHealthEventDTO";
+import {CreateHealthEventDTO} from "../domain/healthEvent/dto/CreateHealthEventDTO";
 
 export class HealthEventService implements CrudPort<HealthEvent> {
     constructor(private repo: RepositoryPort<HealthEvent>) {}
 
-    create(event: HealthEvent): Promise<HealthEvent> {
+    create(event: CreateHealthEventDTO): Promise<HealthEvent> {
         return this.repo.save(event);
     }
 
@@ -21,7 +23,7 @@ export class HealthEventService implements CrudPort<HealthEvent> {
         return this.repo.findAll();
     }
 
-    update(eventId: string, event: HealthEvent): Promise<HealthEvent> {
+    update(eventId: string, event: UpdateHealthEventDTO): Promise<HealthEvent> {
         return this.repo.update(eventId, event);
     }
 }
