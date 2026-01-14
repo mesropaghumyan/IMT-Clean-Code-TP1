@@ -5,9 +5,9 @@ import path from 'path';
 import fs from 'fs';
 import { errorHandler } from "./adapters/primary/express/middlewares/errorHandler";
 import { ExpenseService } from "./services/ExpenseService";
-import {InMemoryExpenseRepo} from "./adapters/driven/InMemoryExpenseRepo";
+import {SqliteExpenseRepo} from "./adapters/driven/SqliteExpenseRepo";
 import {ExpenseController} from "./adapters/driving/ExpenseController";
-import {InMemoryHealthEventRepo} from "./adapters/driven/InMemoryHealthEventRepo";
+import {MemoryHealthEventRepo} from "./adapters/driven/MemoryHealthEventRepo";
 import {HealthEventService} from "./services/HealthEventService";
 import {HealthEventController} from "./adapters/driving/HealthEventController";
 
@@ -20,12 +20,12 @@ const file = fs.readFileSync(swaggerPath, 'utf8');
 const swaggerDoc = YAML.parse(file);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
-const expenseRepo = new InMemoryExpenseRepo();
+const expenseRepo = new SqliteExpenseRepo();
 const expenseService = new ExpenseService(expenseRepo);
 const expenseController = new ExpenseController(expenseService);
 expenseController.registerRoutes(app);
 
-const healthEventRepo = new InMemoryHealthEventRepo();
+const healthEventRepo = new MemoryHealthEventRepo();
 const healthEventService = new HealthEventService(healthEventRepo);
 const healthEventController = new HealthEventController(healthEventService);
 healthEventController.registerRoutes(app);

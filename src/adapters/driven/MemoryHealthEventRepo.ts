@@ -4,7 +4,7 @@ import { NotFoundError } from "../../errors/NotFoundError";
 import { HealthEvent } from "../../domain/healthEvent/HealthEvent";
 import { HealthEventBuilder } from "../../domain/healthEvent/builder/HealthEventBuilder";
 
-export class InMemoryHealthEventRepo implements RepositoryPort<HealthEvent> {
+export class MemoryHealthEventRepo implements RepositoryPort<HealthEvent> {
     constructor(private store: HealthEvent[] = []) {}
 
     async delete(id: string): Promise<void> {
