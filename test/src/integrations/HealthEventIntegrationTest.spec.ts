@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { HealthEventService } from "../../../src/services/HealthEventService";
-import { InMemoryHealthEventRepo } from "../../../src/adapters/driven/InMemoryHealthEventRepo";
+import { MemoryHealthEventRepo } from "../../../src/adapters/driven/MemoryHealthEventRepo";
 import { HealthEventSeverity } from "../../../src/domain/healthEvent/enum/HealthEventSeverity";
 import { CreateHealthEventDTO } from "../../../src/domain/healthEvent/dto/CreateHealthEventDTO";
 import { UpdateHealthEventDTO } from "../../../src/domain/healthEvent/dto/UpdateHealthEventDTO";
@@ -8,10 +8,10 @@ import { NotFoundError } from "../../../src/errors/NotFoundError";
 
 describe('HealthEvent Integration (Service + Repo)', () => {
     let service: HealthEventService;
-    let repo: InMemoryHealthEventRepo;
+    let repo: MemoryHealthEventRepo;
 
     beforeEach(() => {
-        repo = new InMemoryHealthEventRepo();
+        repo = new MemoryHealthEventRepo();
         service = new HealthEventService(repo);
     });
 

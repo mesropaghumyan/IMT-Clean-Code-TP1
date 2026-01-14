@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { ExpenseService } from "../../../src/services/ExpenseService";
-import { InMemoryExpenseRepo } from "../../../src/adapters/driven/InMemoryExpenseRepo";
+import { SqliteExpenseRepo } from "../../../src/adapters/driven/SqliteExpenseRepo";
 import { ExpenseTag } from "../../../src/domain/expense/enum/ExpenseTag";
 import { NotFoundError } from "../../../src/errors/NotFoundError";
 import { CreateExpenseDTO } from "../../../src/domain/expense/dto/CreateExpenseDTO";
@@ -8,10 +8,10 @@ import { UpdateExpenseDTO } from "../../../src/domain/expense/dto/UpdateExpenseD
 
 describe('Expense Integration (Service + Repo)', () => {
     let service: ExpenseService;
-    let repo: InMemoryExpenseRepo;
+    let repo: SqliteExpenseRepo;
 
     beforeEach(() => {
-        repo = new InMemoryExpenseRepo();
+        repo = new SqliteExpenseRepo();
         service = new ExpenseService(repo);
     });
 
